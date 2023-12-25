@@ -18,4 +18,4 @@ Route::get('/', function () {
     return view('backend.layouts.app');
 });
 
-Route::get('/inbox', [InboxController::class, 'inbox']);
+Route::get('/inbox', [InboxController::class, 'inbox'])->name('inbox');
