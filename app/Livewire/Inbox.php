@@ -4,10 +4,12 @@ namespace App\Livewire;
 
 use App\Models\Number;
 use Livewire\Component;
+use Livewire\WithPagination;
 use SMS;
 
 class Inbox extends Component
 {
+    use WithPagination;
 
     //sending sms
     public $phone   = null;
@@ -34,17 +36,6 @@ class Inbox extends Component
     //storing number funtion
     public function save()
     {
-        // $this->validate([
-        //     'number' => 'required|min:10|max:11',
-        // ]);
-
-        // $number = new Number();
-        // $number->name   = 'Random';
-        // $number->number = $this->number;
-        // $number->save();
-
-        // session()->flash('succ', 'done');
-        // $this->number = null;
     }
 
     //getting number list

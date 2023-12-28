@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\InboxController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('backend.layouts.app');
-});
+})->name('home');
 
 Route::get('/inbox', [InboxController::class, 'inbox'])->name('inbox');
+Route::get('/contact', [ContactController::class, 'contact'])->name('contact');

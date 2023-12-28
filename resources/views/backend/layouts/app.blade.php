@@ -11,7 +11,7 @@
     @livewireStyles
 </head>
 
-<body>
+<body class="relative">
     @include('backend.layouts.header')
     @include('backend.layouts.slide')
     {{-- Body --}}
@@ -21,6 +21,8 @@
 
     @include('backend.layouts.footer')
     @livewireScripts
+
+    @yield('script')
     <script src="{{ asset('asset/script/main.js') }}"></script>
 </body>
 
