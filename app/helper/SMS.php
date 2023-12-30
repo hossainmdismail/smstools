@@ -6,8 +6,8 @@ class SMS
     {
 
         $url = "http://bulksmsbd.net/api/smsapi";
-        $api_key = "5Ga7wUBj70JdpiqVhe8t";
-        $senderid = "809617611020";
+        $api_key = "ZjvNGWfYlrvk6wUKhQQb";
+        $senderid = "8809617614289";
 
         $data = [
             "api_key" => $api_key,
@@ -16,26 +16,23 @@ class SMS
             "message" => $message
         ];
 
-        try {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            $response = curl_exec($ch);
 
-            if ($response == false) {
-                throw new Exception(curl_error($ch));
-            }
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $response = json_decode(curl_exec($ch));
 
-            curl_close($ch);
-            return true; // SMS sent successfully
-        } catch (Exception $e) {
-            // Log the error or perform any necessary actions
-            error_log("SMS sending failed: " . $e->getMessage());
+        // return $response;
 
-            return false; // Failed to send SMS
+        if ($response && isset($response->response_code) && $response->response_code != 202) {
+            $errorMessage = $response->error_message;
+
+            return ['success' => false, 'error_message' => $errorMessage];
         }
+
+        return ['success' => true];
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Models\Category;
+use App\Models\Contact;
 use App\Models\Number;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -14,22 +16,47 @@ class Inbox extends Component
     //sending sms
     public $phone   = null;
     public $message = null;
+    public $category = null;
 
     //storing number
     public $number = '';
     public $lastID = 0;
 
+
+    public function labels()
+    {
+        $this->phone = '';
+        if ($this->category != null) {
+            $numbers = Contact::where('category_id', $this->category)->get();
+
+            $index = 0;
+            $totalNumbers = $numbers->count();
+
+            foreach ($numbers as $number) {
+                $this->phone .= $number->number;
+
+                // Check if the current number is not the last one
+                if ($index < $totalNumbers - 1) {
+                    $this->phone .= ','; // Append comma if it's not the last iteration
+                }
+
+                $index++; // Increment the iteration counter
+            }
+        }
+    }
+
     public function send()
     {
         $this->validate([
-            'phone'     => 'required|min:10|max:11',
+            'phone'     => 'required',
             'message'   => 'required',
         ]);
 
-        $number = 0 . $this->phone;
-
-        if (SMS::Send($number, $this->message)) {
+        $send = SMS::Send($this->phone, $this->message);
+        if ($send && $send['success'] == 202) {
             session()->flash('send', 'Send successfully');
+        } else {
+            session()->flash('send', $send['error_message']);
         }
     }
 
@@ -50,22 +77,26 @@ class Inbox extends Component
 
     public function clipBoard($id)
     {
-        $number = Number::find($id);
+        $this->phone = '';
+        $number = Contact::find($id);
         $this->phone = $number->number;
     }
 
     public function render()
     {
-        $numbers = Number::query()
+        $numbers = Contact::query()
             ->where(function ($query) {
                 $query->where('name', 'like', '%' . $this->number . '%')
                     ->orWhere('number', 'like', '%' . $this->number . '%');
                 // Add more fields here for searching (e.g., 'email', 'description', etc.)
             })
-            ->get();
+            ->paginate(10);
+
+        $category = Category::all();
 
         return view('livewire.inbox', [
-            'numbers' =>  $numbers,
+            'numbers'    =>  $numbers,
+            'categories' =>  $category,
         ]);
     }
 }

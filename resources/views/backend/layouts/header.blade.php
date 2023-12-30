@@ -8,7 +8,7 @@
 
         <!-- Logo -->
         <div class="ml-1">
-            <img src="{{ asset('asset/logo_dsefault.png') }}" alt="logo" class="w-28 p-4">
+            <img src="{{ asset('asset/logo_dsefault.png') }}" alt="logo" class="w-32 p-2">
         </div>
 
         <!-- Ícono de Notificación y Perfil -->

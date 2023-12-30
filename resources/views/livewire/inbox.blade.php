@@ -1,5 +1,5 @@
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-    <div class="col-span-0 md:col-span-2 bg-slate-50 rounded-xl shadow-md p-4 h-fit">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class=" bg-slate-50 rounded-xl shadow-md p-4 h-fit">
         <h2 class="mb-1 text-xl font-semibold text-gray-700">Send</h2>
         <hr class="mb-3">
         <form wire:submit="send">
@@ -12,11 +12,12 @@
             <div class="flex mb-3">
                 <span
                     class="inline-flex items-center px-3 text-sm text-gray-900 border border-e-0 border-gray-300 rounded-s-md">
-                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path
-                            d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm0 5a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 13a8.949 8.949 0 0 1-4.951-1.488A3.987 3.987 0 0 1 9 13h2a3.987 3.987 0 0 1 3.951 3.512A8.949 8.949 0 0 1 10 18Z" />
-                    </svg>
+                    <select wire:model="category" wire:change="labels">
+                        <option value="">Labels</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
                 </span>
                 <input type="text" wire:model="phone"
                     class="rounded-none rounded-e-lg  border border-gray-300 @error('phone') border-red-600 @enderror text-gray-900 focus:outline-none focus:ring-1 focus:ring-cyan-500 block flex-1 min-w-0 w-full text-sm p-2.5 "
@@ -89,8 +90,9 @@
                             {{ $number->number }}
                         </td>
                         <td>
-                            <a wire:click="clipBoard({{ $number->id }})"
-                                class="font-medium text-blue-600 dark:text-blue-500 hover:underline">SMS</a>
+                            <a wire:click="clipBoard({{ $number->id }})" class="text-gray-800 cursor-pointer">
+                                <img src="{{ asset('logos/send.svg') }}">
+                            </a>
                         </td>
                     </tr>
                 @empty
@@ -98,5 +100,6 @@
                 @endforelse
             </tbody>
         </table>
+        <div>{{ $numbers->links('livewire::custom') }}</div>
     </div>
 </div>
