@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Category;
 use App\Models\Contact;
 use App\Models\Number;
+use App\Models\Send;
 use Livewire\Component;
 use Livewire\WithPagination;
 use SMS;
@@ -47,17 +48,21 @@ class Inbox extends Component
 
     public function send()
     {
+        
         $this->validate([
             'phone'     => 'required',
             'message'   => 'required',
         ]);
 
+
+        
         $send = SMS::Send($this->phone, $this->message);
         if ($send && $send['success'] == 202) {
             session()->flash('send', 'Send successfully');
         } else {
             session()->flash('send', $send['error_message']);
         }
+    
     }
 
     //storing number funtion

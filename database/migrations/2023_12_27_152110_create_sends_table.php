@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('sends', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('sender_id');
+            $table->enum('send_type', ['individual', 'group']);
+            $table->string('recipient')->nullable();
+            $table->bigInteger('group_id')->nullable();
+            $table->enum('status', ['delivered', 'failed', 'schedule']);
+            $table->string('message');
+            $table->timestamp('schedule')->nullable();
             $table->timestamps();
         });
     }
