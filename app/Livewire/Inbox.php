@@ -49,16 +49,36 @@ class Inbox extends Component
     public function send()
     {
         
+        // dd(count($count));
         $this->validate([
             'phone'     => 'required',
             'message'   => 'required',
         ]);
-
-
         
+
+
         $send = SMS::Send($this->phone, $this->message);
         if ($send && $send['success'] == 202) {
+            $phone = $this->phone;
+            $count = explode(',',$phone);
+    
+            $history = new Send();
+            $history->sender_id = 1;
+            $history->message =$this->message;
+            $history->status ='delivered';
+            
+            if (count($count) >= 2) {
+                $history->send_type ='group';
+                $history->group_id =$this->category;
+            }else {
+                $history->send_type ='individual';
+                $history->recipient = $this->phone;
+            }
+            $history->save();
+
+
             session()->flash('send', 'Send successfully');
+        
         } else {
             session()->flash('send', $send['error_message']);
         }
@@ -73,7 +93,7 @@ class Inbox extends Component
     //getting number list
     public function getNumbersProperty()
     {
-        $data = Number::orderBy('id', 'DESC')->get();
+        $data = Contact::orderBy('id', 'DESC')->get();
         if ($data->count() != 0) {
             $this->lastID = $data->first()->id;
         }
