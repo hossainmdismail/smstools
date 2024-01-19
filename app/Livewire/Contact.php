@@ -15,7 +15,7 @@ class Contact extends Component
     public $category = '';
 
     public $contactid = null;
-    public $label = '';
+    public $label = ''; 
     public $name = '';
     public $number = '';
     public $email = '';
